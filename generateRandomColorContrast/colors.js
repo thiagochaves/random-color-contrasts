@@ -2,19 +2,7 @@ const contrast = require("get-contrast");
 const colorNamer = require("color-namer");
 const randomColor = require("random-hex-color");
 
-/*
-  colors to block for various reasons, for example this one:
-  https://botsin.space/@accessibleColors/101967888732908331
-
-  for example in .env use:
-  COLOR_BLOCKLIST='["flesh"]'
-  
-  this will skip this color name and try another one
-  
-  we'll put in in .env just incase there are words you'd rather not read
-  in source code...
-*/
-const COLOR_BLOCKLIST = JSON.parse(process.env.COLOR_BLOCKLIST);
+const COLOR_BLOCKLIST = []
 
 function colorIsBlocked(str) {
   return COLOR_BLOCKLIST.includes(str.toLowerCase());
