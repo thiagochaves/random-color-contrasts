@@ -1,7 +1,6 @@
-const { drawImage } = require("./images");
 const { getColors } = require("./colors");
 
-function generateRandomColorContrast({ imageFilePath }) {
+function generateRandomColorContrast() {
   const colors = getColors();
   const { colorOne, colorTwo, ratio, score } = colors;
 
@@ -13,15 +12,12 @@ function generateRandomColorContrast({ imageFilePath }) {
   ].join("\n");
   const imageDescription = `${colorOne.name} (${colorOne.hex}) and ${colorTwo.name} (${colorTwo.hex})`;
 
-  return drawImage(imageFilePath, colors).then(() => {
-    return {
-      path: imageFilePath,
-      description: imageDescription,
-      colors: text,
-      colorOne: colorOne.hex,
-      colorTwo: colorTwo.hex,
-    };
-  });
+  return {
+    description: imageDescription,
+    colors: text,
+    colorOne: colorOne.hex,
+    colorTwo: colorTwo.hex,
+  };
 }
 
 module.exports = generateRandomColorContrast;

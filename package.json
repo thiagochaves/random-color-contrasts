@@ -5,12 +5,11 @@
     "start": "node main.js"
   },
   "engines": {
-    "node": "12.18.3"
+    "node": "^25.0.0"
   },
   "dependencies": {
-    "canvas": "^2.6.1",
-    "color-namer": "^1.4.0",
     "get-contrast": "^3.0.0",
+    "color-namer": "^1.4.0",
     "random-hex-color": "^1.0.1"
   }
 }
