@@ -1,29 +1,30 @@
-# random color contrast bot
+# random-color-contrasts
 
-⚫🌈⚪ A Mastodon bot that grabs colours contrast combos
+CLI tool that generates random, accessible color pairs.
 
-Inspired by and code stolen from: [randoma11y.com](https://randoma11y.com)
-
-## How does the bot work?
-
-You can <a rel="me" href="https://botsin.space/@randomColorContrasts">follow the bot on @randomColorContrasts@botsin.space</a>.
-
-When you post any media (images and videos) without text descriptions it will respond with a message.
-
-## Installing the bot
-
-1. Install dependancies
+## Usage
 
 ```bash
-npm install
+npm start
 ```
 
-2. Create a Mastodon application and get the access token
-   > You can do this from the settings in Mastodon. There's a 'Development' section. Give the bot all permissions.
+Or run `main.js` directly.
 
-3) Add environment variables
+## Output Format
 
-- `MASTODON_API_URL` is the URL for the instance you're on.
-- `MASTODON_ACCESS_TOKEN` is the access token from the previous step
+```
+Generating random color contrast...
+Generated random color contrast!
+Description: [Description]
+Full text: [HexColorOne] and [PantoneName], [HexColorTwo] and [PantoneName]
+Color One: [HEXCOLOR] - [ColorName]
+Color Two: [HEXCOLOR] - [ColorName]
+```
 
-4. Run the application!
+## Options
+
+- **Blocklist colors**: Edit `COLOR_BLOCKLIST` in `colors.js`
+- **API accessibility**: Uses `get-contrast` to ensure WCAG compliant ratios
+- **Color naming**: Returns Pantone, NTC, and RoyGBiv names (nearest match)
+
+## Dependencies
