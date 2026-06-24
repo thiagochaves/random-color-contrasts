@@ -19,12 +19,14 @@ void generate_hex(char* hex) {
 }
 
 char* get_pantone(int r, int g, int b) {
-    if (r > g && r > b) return "Red";
-    if (g > r && g > b) return "Green";
-    if (b > r && b > g) return "Blue";
+    if (r > 180 && g > 180 && b > 180) return "White";
+    if (r < 60 && g < 60 && b < 60) return "Black";
+    if (r > g && r > b) return "Magenta";
+    if (g > r && g > b) return "Lime";
+    if (b > r && b > g) return "Cyan";
     if (r + g + b < 150) return "Dark";
     if (r + g + b > 450) return "Light";
-    return "Medium";
+    return "Gray";
 }
 
 char* get_ntc(char* hex) {
@@ -94,9 +96,11 @@ int main(void) {
     hex_to_rgb(hex1, &r1, &g1, &b1);
     hex_to_rgb(hex2, &r2, &g2, &b2);
     
-    printf("Hex 1: %s | Hex 2: %s\n", hex1, hex2);
-    printf("Contrast: %.1f:1\n", get_contrast_ratio(hex1, hex2));
-    printf("Luminance: %.1f | %.1f\n", get_lum_hex(hex1) * 100, get_lum_hex(hex2) * 100);
+    printf("Color One: %s - %s\n", hex1, hex1);
+    printf("Color Two: %s - %s\n", hex2, hex2);
+    printf("Description: %s and %s\n", hex1, hex2);
+    printf("Full text: %s - %s\n%s - %s\n(Contrast ratio: %.1f:1 | %.0f)\n",
+           hex1, hex1, hex2, hex2, get_contrast_ratio(hex1, hex2), get_contrast_ratio(hex1, hex2) * 5);
     
     return 0;
 }
