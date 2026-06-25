@@ -249,6 +249,7 @@ int main(void) {
     int attempts = 0;
     const int max_attempts = 1000;
     
+    printf("Generating random color contrast...\n");
     do {
         generate_hex(hex1);
         generate_hex(hex2);
@@ -257,6 +258,8 @@ int main(void) {
     
     if (attempts >= max_attempts) {
         fprintf(stderr, "Warning: max attempts reached\n");
+    } else {
+        printf("Generated random color contrast!\n");
     }
     
     int r1, g1, b1, r2, g2, b2;
@@ -266,11 +269,18 @@ int main(void) {
     char* name1 = get_pantone(r1, g1, b1);
     char* name2 = get_pantone(r2, g2, b2);
     
-    printf("Color One: %s - %s\n", hex1, name1);
-    printf("Color Two: %s - %s\n", hex2, name2);
-    printf("Description: %s and %s\n", hex1, hex2);
-    printf("Full text: %s - %s\n%s - %s\n(Contrast ratio: %.1f:1 | %.0f)\n",
-           hex1, name1, hex2, name2, get_contrast_ratio(hex1, hex2), get_contrast_ratio(hex1, hex2) * 5);
+    printf("Description: %s (#%s) and %s (#%s)\n", name1, hex1, name2, hex2);
+    printf("Full text: %s #%s\n%s #%s\n", name1, hex1, name2, hex2);
+    {
+        double ratio = get_contrast_ratio(hex1, hex2);
+        const char* rating;
+        if (ratio >= 7.0) rating = "AAA";
+        else if (ratio < 4.5) rating = "N/A";
+        else rating = "AA";
+        printf("(Contrast ratio: %.1f:1 | %s)\n", ratio, rating);
+    }
+    printf("Color One: #%s\n", hex1);
+    printf("Color Two: #%s\n", hex2);
     
     return 0;
 }
