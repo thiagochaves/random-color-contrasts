@@ -28,3 +28,11 @@ Single-file implementation with:
 - Embedded color database
 - No heap allocation
 - Safe string handling
+
+## Performance Comparison
+
+| Implementation | Runtime |
+|---|---|
+| C (`c-port/random-color-contrasts`) | 0.001-0.002s |
+| JS (`src/main.js`) | ~27ms |
+| **Speedup** | **10-30x faster** |
