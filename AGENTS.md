@@ -13,13 +13,14 @@
 **Core**: Uses `get-contrast` API for WCAG-compliant color ratios.
 
 **Multi-language**: Same logic exists in:
-- Python: `generate_colors.py` (148 HTML colors)
-- C: `c-port/main.c` (compiled to `c-port/random-color-contrasts`)
+- C: `c-port/main.c` (compiled to `c-port/random-color-contrasts`) — 10-30x faster than JS
+- JavaScript: `generateRandomColorContrast/`
 
 ## Customization
 
 - Blocklist colors: Edit `COLOR_BLOCKLIST` in `generateRandomColorContrast/colors.js`
-- Color definitions: `generate_colors.py` (lines 4-115), `c-port/main.c` (lines 18-148)
+- C color definitions: `c-port/main.c` (lines 18-148)
+- JS color logic: `generateRandomColorContrast/colors.js`
 
 ## Agent skills
 

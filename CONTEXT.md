@@ -6,9 +6,10 @@ A CLI tool that generates foreground/background color pairs meeting WCAG contras
 
 ## Implementation
 
+- **C**: `c-port/main.c` (compiled binary) — fastest, for dwm/dunst
 - **JavaScript**: `generateRandomColorContrast/index.js` + `generateRandomColorContrast/colors.js`
-- **Python**: `generate_colors.py` (148 HTML colors)
-- **C**: `c-port/main.c` (compiled binary)
+
+Shared logic: Same contrast logic across both implementations.
 
 ## Use Cases
 
