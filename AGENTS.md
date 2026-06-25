@@ -20,3 +20,21 @@
 
 - Blocklist colors: Edit `COLOR_BLOCKLIST` in `generateRandomColorContrast/colors.js`
 - Color definitions: `generate_colors.py` (lines 4-115), `c-port/main.c` (lines 18-148)
+
+## Agent skills
+
+### Issue tracker
+
+Local markdown under `.scratch/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Using canonical labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout with `CONTEXT.md` and `docs/adr/` at repo root. See `docs/agents/domain.md`.
+
+---
+
+**Setup by setup-matt-pocock-skills.**
