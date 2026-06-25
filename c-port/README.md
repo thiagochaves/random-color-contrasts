@@ -31,8 +31,8 @@ Single-file implementation with:
 
 ## Performance Comparison
 
-| Implementation | Runtime |
-|---|---|
-| C (`c-port/random-color-contrasts`) | 0.001-0.002s |
-| JS (`src/main.js`) | ~27ms |
-| **Speedup** | **10-30x faster** |
+| Implementation | Runtime (100 iterations) | Per Call |
+|---|---|---|
+| C (`c-port/random-color-contrasts`) | ~0.1s | ~0.001s |
+| JS (`main.js`) | ~7.5s | ~0.07s |
+| **Speedup** | | **~70x faster** |
