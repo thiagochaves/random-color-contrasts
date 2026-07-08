@@ -3,3 +3,5 @@ public/output.png
 .env
 .pki
 handoff*
+c-port/random-color-contrasts
+c-port/randcolor
