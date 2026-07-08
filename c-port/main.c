@@ -5,7 +5,8 @@
 #include <math.h>
 
 int hex_to_rgb(const char* hex, int* r, int* g, int* b) {
-    return sscanf(hex, "%02x%02x%02x", r, g, b);
+    if (hex == NULL || strlen(hex) != 6) return 0;
+    return sscanf(hex, "%02x%02x%02x", r, g, b) == 3 ? 1 : 0;
 }
 
 #define MAX_COLORS 142
@@ -159,11 +160,11 @@ static struct {
 };
 
 void generate_hex(char* hex) {
-    int r = rand() % 255 + 1, g = rand() % 255 + 1, b = rand() % 255 + 1;
+    int r = rand() % 256, g = rand() % 256, b = rand() % 256;
     sprintf(hex, "%02X%02X%02X", r, g, b);
 }
 
-char* get_pantone(int r, int g, int b) {
+const char* get_pantone(int r, int g, int b) {
     int tolerance = 26;  // 10% of 255
     
     /* Check HTML color lookup table */
@@ -181,17 +182,22 @@ char* get_pantone(int r, int g, int b) {
     if (lum < 0.15) return "Black";
     
     /* Color family detection */
-    double max_c = fmax(r, fmax(g, b));
-    double min_c = fmin(r, fmin(g, b));
-    double saturation = (max_c - min_c) / max_c;
-    
-    if (max_c == r && saturation > 0.5) return "Red";
-    if (max_c == g && saturation > 0.5) return "Green";
-    if (max_c == b && saturation > 0.5) return "Blue";
-    
+    int max_v = r, min_v = r, imax = 0;
+    if (g > max_v) { max_v = g; imax = 1; }
+    if (b > max_v) { max_v = b; imax = 2; }
+    if (g < min_v) { min_v = g; }
+    if (b < min_v) { min_v = b; }
+    double saturation = max_v == 0 ? 0.0 : (double)(max_v - min_v) / max_v;
+
+    if (saturation > 0.5) {
+        if (imax == 0) return "Red";
+        if (imax == 1) return "Green";
+        return "Blue";
+    }
+
     /* Generic fallback */
-    if (max_c == r) return "Red-family";
-    if (max_c == g) return "Green-family";
+    if (imax == 0) return "Red-family";
+    if (imax == 1) return "Green-family";
     return "Blue-family";
 }
 
@@ -240,7 +246,7 @@ double get_lum_hex(const char* hex) {
 double get_contrast_ratio(const char* c1, const char* c2) {
     double L1 = get_lum_hex(c1), L2 = get_lum_hex(c2);
     double Lmax = fmax(L1, L2), Lmin = fmin(L1, L2);
-    return Lmax / Lmin;
+    return (Lmax + 0.05) / (Lmin + 0.05);
 }
 
 int main(void) {
@@ -266,8 +272,8 @@ int main(void) {
     hex_to_rgb(hex1, &r1, &g1, &b1);
     hex_to_rgb(hex2, &r2, &g2, &b2);
     
-    char* name1 = get_pantone(r1, g1, b1);
-    char* name2 = get_pantone(r2, g2, b2);
+    const char* name1 = get_pantone(r1, g1, b1);
+    const char* name2 = get_pantone(r2, g2, b2);
     
     printf("Description: %s (#%s) and %s (#%s)\n", name1, hex1, name2, hex2);
     printf("Full text: %s #%s\n%s #%s\n", name1, hex1, name2, hex2);
