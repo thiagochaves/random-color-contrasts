@@ -4,6 +4,11 @@
 #include <time.h>
 #include <math.h>
 
+/* noinline: the strlen(NULL) UB inside would let gcc elide the explicit
+ * NULL check at -O2 even though it's reachable through user input. */
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((noinline, noclone))
+#endif
 int hex_to_rgb(const char* hex, int* r, int* g, int* b) {
     if (hex == NULL || strlen(hex) != 6) return 0;
     unsigned int ur, ug, ub;
