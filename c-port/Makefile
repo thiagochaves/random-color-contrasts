@@ -8,7 +8,17 @@ all: $(TARGET)
 $(TARGET): main.c
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-clean:
-	rm -f $(TARGET)
+TEST_BIN = test/test_main
 
-.PHONY: all clean
+$(TEST_BIN): test/test_main.c test/test_helpers.h main.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+test: $(TARGET) $(TEST_BIN)
+	./$(TEST_BIN)
+	node test/parity.js
+	sh test/smoke.sh
+
+clean:
+	rm -f $(TARGET) $(TEST_BIN)
+
+.PHONY: all test clean

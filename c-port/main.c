@@ -223,32 +223,15 @@ double get_contrast_ratio(const char* c1, const char* c2) {
     return (Lmax + 0.05) / (Lmin + 0.05);
 }
 
-int main(void) {
-    srand(time(NULL));  // Seed RNG once at startup
-    char hex1[7], hex2[7];
-    int attempts = 0;
-    const int max_attempts = 1000;
-    
-    printf("Generating random color contrast...\n");
-    do {
-        generate_hex(hex1);
-        generate_hex(hex2);
-        attempts++;
-    } while (get_contrast_ratio(hex1, hex2) < 4.5 && attempts < max_attempts);
-    
-    if (attempts >= max_attempts) {
-        fprintf(stderr, "Warning: max attempts reached\n");
-    } else {
-        printf("Generated random color contrast!\n");
-    }
-    
+#ifndef TEST_SKIP_MAIN
+static void print_contrast_report(const char* hex1, const char* hex2) {
     int r1, g1, b1, r2, g2, b2;
     hex_to_rgb(hex1, &r1, &g1, &b1);
     hex_to_rgb(hex2, &r2, &g2, &b2);
-    
+
     const char* name1 = get_pantone(r1, g1, b1);
     const char* name2 = get_pantone(r2, g2, b2);
-    
+
     printf("Description: %s (#%s) and %s (#%s)\n", name1, hex1, name2, hex2);
     printf("Full text: %s #%s\n%s #%s\n", name1, hex1, name2, hex2);
     {
@@ -261,6 +244,56 @@ int main(void) {
     }
     printf("Color One: #%s\n", hex1);
     printf("Color Two: #%s\n", hex2);
-    
+}
+
+static void print_machine_report(const char* hex1, const char* hex2) {
+    int r1, g1, b1, r2, g2, b2;
+    hex_to_rgb(hex1, &r1, &g1, &b1);
+    hex_to_rgb(hex2, &r2, &g2, &b2);
+
+    const char* name1 = get_pantone(r1, g1, b1);
+    const char* name2 = get_pantone(r2, g2, b2);
+    double ratio = get_contrast_ratio(hex1, hex2);
+    const char* rating;
+    if (ratio >= 7.0) rating = "AAA";
+    else if (ratio < 4.5) rating = "N/A";
+    else rating = "AA";
+    printf("ratio=%.2f\nrating=%s\nname1=%s\nname2=%s\n", ratio, rating, name1, name2);
+}
+
+int main(int argc, char** argv) {
+    if (argc == 4 && strcmp(argv[1], "--hex") == 0) {
+        if (strlen(argv[2]) != 6 || strlen(argv[3]) != 6) {
+            fprintf(stderr, "Each hex must be exactly 6 chars\n");
+            return 1;
+        }
+        print_machine_report(argv[2], argv[3]);
+        return 0;
+    }
+    if (argc != 1) {
+        fprintf(stderr, "Usage: %s [--hex AABBCC DDEEFF]\n", argv[0]);
+        return 1;
+    }
+
+    srand(time(NULL));
+    char hex1[7], hex2[7];
+    int attempts = 0;
+    const int max_attempts = 1000;
+
+    printf("Generating random color contrast...\n");
+    do {
+        generate_hex(hex1);
+        generate_hex(hex2);
+        attempts++;
+    } while (get_contrast_ratio(hex1, hex2) < 4.5 && attempts < max_attempts);
+
+    if (attempts >= max_attempts) {
+        fprintf(stderr, "Warning: max attempts reached\n");
+    } else {
+        printf("Generated random color contrast!\n");
+    }
+
+    print_contrast_report(hex1, hex2);
     return 0;
 }
+#endif

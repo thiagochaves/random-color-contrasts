@@ -4,14 +4,19 @@
 
 ```bash
 make          # Builds random-color-contrasts binary
+make test     # Runs C unit tests, JS parity tests, and smoke test
 make clean    # Removes binary
 ```
 
 ## Usage
 
 ```bash
-./random-color-contrasts
+./random-color-contrasts                    # Generate a random accessible pair
+./random-color-contrasts --hex AABBCC DDEEFF # Compute ratio for a given pair
 ```
+
+`--hex` mode emits machine-readable output (one key=value per line):
+`ratio`, `rating`, `name1`, `name2`. Used by the JS parity tests.
 
 ## Features
 
