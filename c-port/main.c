@@ -84,7 +84,6 @@ static struct {
     {"LightBlue", 173, 216, 230},
     {"LightCoral", 240, 128, 128},
     {"LightCyan", 224, 255, 255},
-    {"LightGoldenrod", 238, 213, 160},
     {"LightGoldenrodYellow", 250, 250, 210},
     {"LightGray", 211, 211, 211},
     {"LightGreen", 144, 238, 144},
@@ -159,8 +158,7 @@ static struct {
     {"White", 255, 255, 255},
     {"WhiteSmoke", 245, 245, 245},
     {"Yellow", 255, 255, 0},
-    {"YellowGreen", 154, 205, 50},
-    {"Amaranth", 255, 128, 171}
+    {"YellowGreen", 154, 205, 50}
 };
 
 void generate_hex(char* hex) {
