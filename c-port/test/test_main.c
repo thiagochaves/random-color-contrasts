@@ -80,6 +80,14 @@ static void test_get_pantone_blue(void) {
     ASSERT_STR_EQ(get_pantone(0, 0, 255), "Blue");
 }
 
+static void test_get_pantone_near_black_uses_luminance_fallback(void) {
+    /* (40,40,40) has no table match within 78 Manhattan distance.
+     * Perceptual luminance after sRGB→linear decode is ~0.023, well below
+     * the 0.15 threshold for "Black". The buggy formula (raw sRGB) gives
+     * ~0.157 — just above 0.15 — and falls through to "Red-family". */
+    ASSERT_STR_EQ(get_pantone(40, 40, 40), "Black");
+}
+
 static void test_generate_hex_format(void) {
     char hex[7];
     generate_hex(hex);
@@ -106,6 +114,7 @@ int main(void) {
     RUN_TEST(test_get_pantone_red);
     RUN_TEST(test_get_pantone_green);
     RUN_TEST(test_get_pantone_blue);
+    RUN_TEST(test_get_pantone_near_black_uses_luminance_fallback);
     RUN_TEST(test_generate_hex_format);
     TEST_SUMMARY();
 }

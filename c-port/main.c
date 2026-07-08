@@ -166,6 +166,14 @@ void generate_hex(char* hex) {
     sprintf(hex, "%02X%02X%02X", r, g, b);
 }
 
+static double get_luminance(int r, int g, int b) {
+    double R = r / 255.0, G = g / 255.0, B = b / 255.0;
+    double r_lin = R <= 0.03928 ? R / 12.92 : pow((R + 0.055) / 1.055, 2.4);
+    double g_lin = G <= 0.03928 ? G / 12.92 : pow((G + 0.055) / 1.055, 2.4);
+    double b_lin = B <= 0.03928 ? B / 12.92 : pow((B + 0.055) / 1.055, 2.4);
+    return 0.2126 * r_lin + 0.7152 * g_lin + 0.0722 * b_lin;
+}
+
 const char* get_pantone(int r, int g, int b) {
     int tolerance = 26;  // 10% of 255
     
@@ -181,9 +189,9 @@ const char* get_pantone(int r, int g, int b) {
     }
     if (best_name != NULL) return best_name;
     
-    /* Luminance-based fallback */
-    double lum = 0.2126 * (r / 255.0) + 0.7152 * (g / 255.0) + 0.0722 * (b / 255.0);
-    
+    /* Luminance-based fallback (WCAG: sRGB→linear first, then weighted sum) */
+    double lum = get_luminance(r, g, b);
+
     if (lum > 0.85) return "White";
     if (lum < 0.15) return "Black";
     
@@ -210,11 +218,7 @@ const char* get_pantone(int r, int g, int b) {
 double get_lum_hex(const char* hex) {
     int r, g, b;
     hex_to_rgb(hex, &r, &g, &b);
-    double R = r / 255.0, G = g / 255.0, B = b / 255.0;
-    double r_lin = R <= 0.03928 ? R / 12.92 : pow((R + 0.055) / 1.055, 2.4);
-    double g_lin = G <= 0.03928 ? G / 12.92 : pow((G + 0.055) / 1.055, 2.4);
-    double b_lin = B <= 0.03928 ? B / 12.92 : pow((B + 0.055) / 1.055, 2.4);
-    return 0.2126 * r_lin + 0.7152 * g_lin + 0.0722 * b_lin;
+    return get_luminance(r, g, b);
 }
 
 double get_contrast_ratio(const char* c1, const char* c2) {
