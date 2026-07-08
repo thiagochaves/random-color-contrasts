@@ -36,11 +36,13 @@ Single-file implementation with:
 
 ## Performance Comparison
 
+Measured on Linux, gcc `-O2` / Node v25, 100 sequential runs after warm-up:
+
 | Implementation | Runtime (100 iterations) | Per Call |
 |---|---|---|
-| C (`c-port/random-color-contrasts`) | ~0.1s | ~0.001s |
-| JS (`main.js`) | ~7.5s | ~0.07s |
-| **Speedup** | | **~70x faster** |
+| C (`c-port/random-color-contrasts`) | ~0.1s | ~1ms |
+| JS (`main.js`) | ~7.8s | ~80ms |
+| **Speedup** | | **~78x faster** |
 
 ## Deferred Improvements
 
