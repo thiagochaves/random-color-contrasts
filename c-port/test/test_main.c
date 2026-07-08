@@ -37,6 +37,15 @@ static void test_hex_to_rgb_rejects_null(void) {
     ASSERT_TRUE(!hex_to_rgb(NULL, &r, &g, &b));
 }
 
+static void test_hex_to_rgb_rejects_invalid_chars(void) {
+    int r = -1, g = -1, b = -1;
+    /* 6 chars but not hex — passes the strlen check, must be caught by sscanf.
+     * Note: sscanf %x skips whitespace, so "12 456" parses to 18,69,6. */
+    ASSERT_TRUE(!hex_to_rgb("ZZZZZZ", &r, &g, &b));
+    ASSERT_TRUE(!hex_to_rgb("ghijkl", &r, &g, &b));
+    ASSERT_EQ_INT(r, -1);
+}
+
 static void test_get_lum_hex_black_is_zero(void) {
     ASSERT_NEAR(get_lum_hex("000000"), 0.0, 1e-9);
 }
@@ -106,6 +115,18 @@ static void test_get_pantone_seashell(void)      { ASSERT_STR_EQ(get_pantone(255
 static void test_get_pantone_springgreen(void)   { ASSERT_STR_EQ(get_pantone(0, 255, 127), "SpringGreen"); }
 static void test_get_pantone_whitesmoke(void)    { ASSERT_STR_EQ(get_pantone(245, 245, 245), "WhiteSmoke"); }
 
+/* Color-family fallback paths. Each input has min Manhattan > 78 against
+ * the 139-entry table AND luminance in (0.15, 0.85), so neither table match
+ * nor the "Black"/"White" luminance fallback fires. Brute-forced from the
+ * full RGB space; see /tmp/find_gaps.c for the search. */
+
+static void test_get_pantone_saturated_red(void)  { ASSERT_STR_EQ(get_pantone(135, 116, 67), "Red"); }
+static void test_get_pantone_saturated_green(void){ ASSERT_STR_EQ(get_pantone(0, 152, 66), "Green"); }
+static void test_get_pantone_saturated_blue(void) { ASSERT_STR_EQ(get_pantone(0, 93, 255), "Blue"); }
+static void test_get_pantone_red_family(void)     { ASSERT_STR_EQ(get_pantone(150, 150, 90), "Red-family"); }
+static void test_get_pantone_green_family(void)   { ASSERT_STR_EQ(get_pantone(95, 164, 82), "Green-family"); }
+static void test_get_pantone_blue_family(void)    { ASSERT_STR_EQ(get_pantone(119, 173, 200), "Blue-family"); }
+
 static void test_generate_hex_format(void) {
     char hex[7];
     generate_hex(hex);
@@ -122,6 +143,7 @@ int main(void) {
     RUN_TEST(test_hex_to_rgb_rejects_short);
     RUN_TEST(test_hex_to_rgb_rejects_long);
     RUN_TEST(test_hex_to_rgb_rejects_null);
+    RUN_TEST(test_hex_to_rgb_rejects_invalid_chars);
     RUN_TEST(test_get_lum_hex_black_is_zero);
     RUN_TEST(test_get_lum_hex_white_is_one);
     RUN_TEST(test_get_contrast_ratio_black_white);
@@ -146,6 +168,12 @@ int main(void) {
     RUN_TEST(test_get_pantone_seashell);
     RUN_TEST(test_get_pantone_springgreen);
     RUN_TEST(test_get_pantone_whitesmoke);
+    RUN_TEST(test_get_pantone_saturated_red);
+    RUN_TEST(test_get_pantone_saturated_green);
+    RUN_TEST(test_get_pantone_saturated_blue);
+    RUN_TEST(test_get_pantone_red_family);
+    RUN_TEST(test_get_pantone_green_family);
+    RUN_TEST(test_get_pantone_blue_family);
     RUN_TEST(test_generate_hex_format);
     TEST_SUMMARY();
 }

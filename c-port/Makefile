@@ -20,5 +20,12 @@ test: $(TARGET) $(TEST_BIN)
 
 clean:
 	rm -f $(TARGET) $(TEST_BIN)
+	rm -f *.gcno *.gcda *.gcov
 
-.PHONY: all test clean
+coverage: test/test_main.c test/test_helpers.h main.c
+	$(CC) $(CFLAGS) --coverage -o $(TEST_BIN) test/test_main.c $(LDFLAGS)
+	./$(TEST_BIN) > /dev/null
+	gcov -b -c test/test_main.c
+	rm -f $(TEST_BIN) *.gcno *.gcda *.gcov
+
+.PHONY: all test coverage clean
