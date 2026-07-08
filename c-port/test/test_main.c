@@ -88,6 +88,24 @@ static void test_get_pantone_near_black_uses_luminance_fallback(void) {
     ASSERT_STR_EQ(get_pantone(40, 40, 40), "Black");
 }
 
+/* CSS named-color spec assertions (https://developer.mozilla.org/en-US/docs/Web/CSS/named-color).
+ * Each test pins the exact RGB for one entry so future table edits can't
+ * silently drift the value. */
+
+static void test_get_pantone_cadetblue(void)     { ASSERT_STR_EQ(get_pantone(95, 158, 160), "CadetBlue"); }
+static void test_get_pantone_chocolate(void)     { ASSERT_STR_EQ(get_pantone(210, 105, 30), "Chocolate"); }
+static void test_get_pantone_deepskyblue(void)   { ASSERT_STR_EQ(get_pantone(0, 191, 255), "DeepSkyBlue"); }
+static void test_get_pantone_forestgreen(void)   { ASSERT_STR_EQ(get_pantone(34, 139, 34), "ForestGreen"); }
+static void test_get_pantone_greenyellow(void)   { ASSERT_STR_EQ(get_pantone(173, 255, 47), "GreenYellow"); }
+static void test_get_pantone_lightsalmon(void)   { ASSERT_STR_EQ(get_pantone(255, 160, 122), "LightSalmon"); }
+static void test_get_pantone_mistyrose(void)     { ASSERT_STR_EQ(get_pantone(255, 228, 225), "MistyRose"); }
+static void test_get_pantone_paleturquoise(void) { ASSERT_STR_EQ(get_pantone(175, 238, 238), "PaleTurquoise"); }
+static void test_get_pantone_rebeccapurple(void) { ASSERT_STR_EQ(get_pantone(102, 51, 153), "RebeccaPurple"); }
+static void test_get_pantone_seagreen(void)      { ASSERT_STR_EQ(get_pantone(46, 139, 87), "SeaGreen"); }
+static void test_get_pantone_seashell(void)      { ASSERT_STR_EQ(get_pantone(255, 245, 238), "Seashell"); }
+static void test_get_pantone_springgreen(void)   { ASSERT_STR_EQ(get_pantone(0, 255, 127), "SpringGreen"); }
+static void test_get_pantone_whitesmoke(void)    { ASSERT_STR_EQ(get_pantone(245, 245, 245), "WhiteSmoke"); }
+
 static void test_generate_hex_format(void) {
     char hex[7];
     generate_hex(hex);
@@ -115,6 +133,19 @@ int main(void) {
     RUN_TEST(test_get_pantone_green);
     RUN_TEST(test_get_pantone_blue);
     RUN_TEST(test_get_pantone_near_black_uses_luminance_fallback);
+    RUN_TEST(test_get_pantone_cadetblue);
+    RUN_TEST(test_get_pantone_chocolate);
+    RUN_TEST(test_get_pantone_deepskyblue);
+    RUN_TEST(test_get_pantone_forestgreen);
+    RUN_TEST(test_get_pantone_greenyellow);
+    RUN_TEST(test_get_pantone_lightsalmon);
+    RUN_TEST(test_get_pantone_mistyrose);
+    RUN_TEST(test_get_pantone_paleturquoise);
+    RUN_TEST(test_get_pantone_rebeccapurple);
+    RUN_TEST(test_get_pantone_seagreen);
+    RUN_TEST(test_get_pantone_seashell);
+    RUN_TEST(test_get_pantone_springgreen);
+    RUN_TEST(test_get_pantone_whitesmoke);
     RUN_TEST(test_generate_hex_format);
     TEST_SUMMARY();
 }
