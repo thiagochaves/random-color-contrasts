@@ -16,7 +16,7 @@ make clean    # Removes binary
 ## Features
 
 - WCAG 4.5:1 contrast ratio compliance
-- HTML color name lookup (~70 common colors)
+- HTML color name lookup (139 colors, nearest-match)
 - 10% RGB tolerance for matching
 - Luminance fallback for white/gray/black
 - Color family fallback (Red/Green/Blue)

@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -O2
+CFLAGS = -Wall -Wextra -Werror -pedantic -std=c99 -O2
 LDFLAGS = -lm
 TARGET = random-color-contrasts
 

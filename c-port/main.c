@@ -6,18 +6,22 @@
 
 int hex_to_rgb(const char* hex, int* r, int* g, int* b) {
     if (hex == NULL || strlen(hex) != 6) return 0;
-    return sscanf(hex, "%02x%02x%02x", r, g, b) == 3 ? 1 : 0;
+    unsigned int ur, ug, ub;
+    if (sscanf(hex, "%02x%02x%02x", &ur, &ug, &ub) != 3) return 0;
+    *r = (int)ur;
+    *g = (int)ug;
+    *b = (int)ub;
+    return 1;
 }
 
-#define MAX_COLORS 142
+#define HTML_COLORS_LEN (sizeof(html_colors) / sizeof(html_colors[0]))
 
 static struct {
     const char* name;
     int r, g, b;
-} html_colors[MAX_COLORS] = {
+} html_colors[] = {
     {"AliceBlue", 240, 248, 255},
     {"AntiqueWhite", 250, 235, 215},
-    {"Aqua", 0, 255, 255},
     {"Aquamarine", 127, 255, 212},
     {"Azure", 240, 255, 255},
     {"Beige", 245, 245, 220},
@@ -54,13 +58,11 @@ static struct {
     {"DarkTurquoise", 0, 206, 209},
     {"DarkViolet", 148, 0, 211},
     {"DeepPink", 255, 20, 147},
-    {"DeepSkyBlue", 0, 255, 255},
     {"DimGray", 105, 105, 105},
     {"DodgerBlue", 30, 144, 255},
     {"FireBrick", 178, 34, 34},
     {"FloralWhite", 255, 250, 240},
     {"ForestGreen", 13, 93, 41},
-    {"Fuchsia", 255, 0, 255},
     {"Gainsboro", 220, 220, 220},
     {"GhostWhite", 248, 248, 255},
     {"Gold", 255, 215, 0},
@@ -154,9 +156,9 @@ static struct {
     {"Wheat", 245, 222, 179},
     {"White", 255, 255, 255},
     {"WhiteSmoke", 240, 240, 240},
-{"Yellow", 255, 255, 0},
-{"YellowGreen", 154, 205, 50},
-{"Amaranth", 255, 128, 171}
+    {"Yellow", 255, 255, 0},
+    {"YellowGreen", 154, 205, 50},
+    {"Amaranth", 255, 128, 171}
 };
 
 void generate_hex(char* hex) {
@@ -167,13 +169,17 @@ void generate_hex(char* hex) {
 const char* get_pantone(int r, int g, int b) {
     int tolerance = 26;  // 10% of 255
     
-    /* Check HTML color lookup table */
-    for (int i = 0; i < MAX_COLORS; i++) {
+    /* Check HTML color lookup table — keep best (smallest diff) match */
+    int best_diff = 3 * tolerance + 1;
+    const char* best_name = NULL;
+    for (int i = 0; i < (int)HTML_COLORS_LEN; i++) {
         int diff = abs(html_colors[i].r - r) + abs(html_colors[i].g - g) + abs(html_colors[i].b - b);
-        if (diff <= 3 * tolerance) {
-            return html_colors[i].name;
+        if (diff < best_diff) {
+            best_diff = diff;
+            best_name = html_colors[i].name;
         }
     }
+    if (best_name != NULL) return best_name;
     
     /* Luminance-based fallback */
     double lum = 0.2126 * (r / 255.0) + 0.7152 * (g / 255.0) + 0.0722 * (b / 255.0);
@@ -201,38 +207,6 @@ const char* get_pantone(int r, int g, int b) {
     return "Blue-family";
 }
 
-char* get_ntc(char* hex) {
-    int R, G, B, L;
-    sscanf(hex, "%02x%02x%02x", &R, &G, &B);
-    L = (int)(0.2126*R + 0.7152*G + 0.0722*B);
-    if (L > 90) return "C2";
-    if (L > 60) return "C1";
-    if (L > 40) return "C1";
-    if (L > 20) return "B7";
-    return "A8";
-}
-
-char* get_roygbiv(char* hex) {
-    int R, G, B;
-    sscanf(hex, "%02x%02x%02x", &R, &G, &B);
-    if (R > G + 30 && G > B - 20) {
-        return (B > 150) ? "Indigo" : "Red";
-    } else if (R < B - 30 && G < R + 20) {
-        return "Blue";
-    } else if (G > R + 30 && R < G - 20) {
-        return (R > 80) ? "Green" : "Green";
-    } else if (B > R + 30 && R > B - 20) {
-        return "Violet";
-    } else if (B > G + 30 && G > B - 20) {
-        return "Blue";
-    } else if (R > 160 && G > 160 && B > 160) {
-        return "Orange";
-    } else if (R < 80 && G < 80 && B < 80) {
-        return "Black";
-    }
-    return "Grey";
-}
-
 double get_lum_hex(const char* hex) {
     int r, g, b;
     hex_to_rgb(hex, &r, &g, &b);
@@ -251,7 +225,7 @@ double get_contrast_ratio(const char* c1, const char* c2) {
 
 int main(void) {
     srand(time(NULL));  // Seed RNG once at startup
-    char hex1[10], hex2[10];
+    char hex1[7], hex2[7];
     int attempts = 0;
     const int max_attempts = 1000;
     
