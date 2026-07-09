@@ -3,6 +3,9 @@ public/output.png
 .env
 .pki
 handoff*
-c-port/random-color-contrasts
-c-port/randcolor
-c-port/test/test_main
+random-color-contrasts
+randcolor
+test/test_main
+*.gcno
+*.gcda
+*.gcov
