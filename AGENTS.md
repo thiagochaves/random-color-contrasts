@@ -2,25 +2,20 @@
 
 ## Quick Start
 
-- Run: `npm start` or `node main.js`
-- Build C version: `cd c-port && make`
-- Clean build: `cd c-port && make clean`
+- Build: `cd c-port && make`
+- Run: `./c-port/random-color-contrasts`
+- Test: `cd c-port && make test`
+- Clean: `cd c-port && make clean`
 
 ## Architecture
 
-**Entry point**: `main.js` calls `generateRandomColorContrast()` from `generateRandomColorContrast/index.js`.
+**Entry point**: `c-port/main.c` — single-file C implementation, compiled to `c-port/random-color-contrasts`.
 
-**Core**: Uses `get-contrast` API for WCAG-compliant color ratios.
-
-**Multi-language**: Same logic exists in:
-- C: `c-port/main.c` (compiled to `c-port/random-color-contrasts`) — 10-30x faster than JS
-- JavaScript: `generateRandomColorContrast/`
+**Core**: In-process WCAG contrast formula (`get_lum_hex`, `get_contrast_ratio`). The JavaScript implementation referenced `get-contrast` from npm; see ADR 0003 for why it was removed.
 
 ## Customization
 
-- Blocklist colors: Edit `COLOR_BLOCKLIST` in `generateRandomColorContrast/colors.js`
-- C color definitions: `c-port/main.c` (lines 18-148)
-- JS color logic: `generateRandomColorContrast/colors.js`
+- **C color definitions**: `c-port/main.c` (lines 18-148) — the `html_colors[]` table.
 
 ## Agent skills
 

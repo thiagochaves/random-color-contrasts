@@ -6,10 +6,9 @@ A CLI tool that generates foreground/background color pairs meeting WCAG contras
 
 ## Implementation
 
-- **C**: `c-port/main.c` (compiled binary) — fastest, for dwm/dunst
-- **JavaScript**: `generateRandomColorContrast/index.js` + `generateRandomColorContrast/colors.js`
+- **C**: `c-port/main.c` (compiled binary) — single source of truth.
 
-Shared logic: Same contrast logic across both implementations.
+JavaScript removed; see ADR 0003.
 
 ## Use Cases
 
@@ -18,20 +17,15 @@ Shared logic: Same contrast logic across both implementations.
 
 ## Contrast Logic
 
-Uses the `get-contrast` API to ensure WCAG 4.5:1 ratio compliance. Falls back to:
-1. Primary random color
-2. Secondary random color (loop until contrast passes)
+In-process WCAG formula: sRGB→linear decode, then weighted sum
+(0.2126, 0.7152, 0.0722), then `(Lmax + 0.05) / (Lmin + 0.05)`. Loop
+re-rolls color pairs until contrast passes 4.5.
 
 ## Color Naming
 
-For each color, returns the nearest match from:
-- Pantone
-- NTC
-- RoyGBiv
+For each color, returns the nearest match from a 139-entry HTML
+named-color table (kept in sync with the MDN CSS spec). 10% RGB
+tolerance per channel. Falls back to a luminance-based "Black"/
+"White" classification, then to a "Red/Green/Blue family" guess.
 
-Names are cosmetic—only hex codes matter for current use cases.
-
-## Blocklist
-
-Unused colors can be blacklisted in `COLOR_BLOCKLIST` in `generateRandomColorContrast/colors.js`.
-
+Names are cosmetic — only hex codes matter for current use cases.
