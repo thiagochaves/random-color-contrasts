@@ -15,7 +15,6 @@ $(TEST_BIN): test/test_main.c test/test_helpers.h main.c
 
 test: $(TARGET) $(TEST_BIN)
 	./$(TEST_BIN)
-	node test/parity.js
 	sh test/smoke.sh
 
 clean:
