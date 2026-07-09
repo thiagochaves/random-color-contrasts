@@ -35,11 +35,19 @@ Color Two: #DDEEFF
 ## Build
 
 ```bash
-make          # Builds random-color-contrasts
-make test     # Runs unit tests + shell smoke
-make coverage # Branch coverage via gcov
-make clean    # Removes binary + coverage artifacts
+make                # Builds random-color-contrasts
+make test           # Runs unit tests + shell smoke
+make coverage       # Branch coverage via gcov
+make clean          # Removes binary + coverage artifacts
+make install        # Installs to $(PREFIX)/bin (default /usr/local, needs sudo)
+make install PREFIX=$HOME/.local  # User-local install (no sudo)
+make install DESTDIR=/tmp/staging  # Staged install for packaging
+make uninstall      # Reverse of install
 ```
+
+When installing to `$HOME/.local/bin`, ensure that directory is on your
+`PATH` (add `export PATH="$HOME/.local/bin:$PATH"` to your shell rc if
+not).
 
 ## Features
 
