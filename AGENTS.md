@@ -2,20 +2,20 @@
 
 ## Quick Start
 
-- Build: `cd c-port && make`
-- Run: `./c-port/random-color-contrasts`
-- Test: `cd c-port && make test`
-- Clean: `cd c-port && make clean`
+- Build: `make`
+- Run: `./random-color-contrasts`
+- Test: `make test`
+- Clean: `make clean`
 
 ## Architecture
 
-**Entry point**: `c-port/main.c` — single-file C implementation, compiled to `c-port/random-color-contrasts`.
+**Entry point**: `main.c` — single-file C implementation.
 
 **Core**: In-process WCAG contrast formula (`get_lum_hex`, `get_contrast_ratio`). The JavaScript implementation referenced `get-contrast` from npm; see ADR 0003 for why it was removed.
 
 ## Customization
 
-- **C color definitions**: `c-port/main.c` (lines 18-148) — the `html_colors[]` table.
+- **C color definitions**: `main.c` (lines 18-148) — the `html_colors[]` table.
 
 ## Agent skills
 

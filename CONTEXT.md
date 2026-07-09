@@ -6,7 +6,7 @@ A CLI tool that generates foreground/background color pairs meeting WCAG contras
 
 ## Implementation
 
-- **C**: `c-port/main.c` (compiled binary) — single source of truth.
+- **C**: `main.c` (compiled binary) — single source of truth.
 
 JavaScript removed; see ADR 0003.
 

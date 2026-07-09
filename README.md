@@ -66,7 +66,7 @@ in favor of the C port; see ADR 0003.
 
 ## Customization
 
-- **C color definitions**: `c-port/main.c` (lines 18-148)
+- **C color definitions**: `main.c` (lines 18-148)
 
 ## Deferred Improvements
 
